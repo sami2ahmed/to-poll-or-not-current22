@@ -2,3 +2,8 @@
 node_modules
 sami_ignore.gitignore
 working.js
+ccloud.properties
+config.js
+std-out-working.js
+client.js
+sse-consumer.js
