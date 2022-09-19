@@ -1,91 +1,76 @@
 //websocket consumer 
 const Kafka = require('node-rdkafka');
-const { configFromPath } = require('./util');
-const express = require('express');
-const port = 3000;
-const app = express();
+const externalConfig = require('./config.js');
 
-function createConfigMap(config) {
-  if (config.hasOwnProperty('security.protocol')) {
-    return {
-      'bootstrap.servers': config['bootstrap.servers'],
-      'sasl.username': config['sasl.username'],
-      'sasl.password': config['sasl.password'],
-      'security.protocol': config['security.protocol'],
-      'sasl.mechanisms': config['sasl.mechanisms'],
-      'group.id': 'nodejs-websockets'
+// construct a Kafka Configuration object understood by the node-rdkafka library
+// merge the configuration as defined in config.js with additional properties defined here
+const kafkaConf = {
+    ...externalConfig.ccloud_config
+    , ...{
+        "socket.keepalive.enable": true,
+        "debug": "generic,broker,security"
     }
-  } else {
-    return {
-      'bootstrap.servers': config['bootstrap.servers'],
-      'group.id': 'nodejs-websockets'
-    }
-  }
-}
-
-function createConsumer(config, onData) {
-  const consumer = new Kafka.KafkaConsumer(
-      createConfigMap(config),
-      {'auto.offset.reset': 'earliest'});
-
-  return new Promise((resolve, reject) => {
-    consumer
-     .on('ready', () => resolve(consumer))
-     .on('data', onData);
-
-    consumer.connect();
-  });
 };
 
-
-async function consumerExample() {
-  if (process.argv.length < 3) {
-    console.log("Please provide the configuration file path as the command line argument");
-    process.exit(1);
-  }
-  let configPath = process.argv.slice(2)[0];
-  const config = await configFromPath(configPath);
-
-  //let seen = 0;
-  let topic = "pageviews";
-
-  const consumer = await createConsumer(config, ({key, value}) => {
-    let k = key.toString().padEnd(10, ' ');
-    console.log(`Consumed event from topic ${topic}: key = ${k} value = ${value}`);
-  });
-
-  consumer.subscribe([topic]);
-  consumer.consume();
-
-  process.on('SIGINT', () => {
-    console.log('\nDisconnecting consumer ...');
-    consumer.disconnect();
-  });
-
-  const server = app.listen(port, () => {
-    console.log(`Listening on port ${server.address().port}`);
-  });
-
-  const io = require('socket.io')(server, {
-    cors: {
-      origin: '*',
-    }
-  });
-
-  io.on('connection', client => {
-    console.log('Connected', client);
-    consumer.on('data', function (data) {
-      console.log(data.value.toString());
-      client.emit('event', data.value.toString());
-    });
-    client.on('disconnect', () => { 
-      console.log('Client disconnected');
-    });
-  });
+let messageHandlers = {} // an key-value map with Kafka Topic Names as key and a reference to a function to handle message consumed from that Topic
+const setMessageHandler = function (topic, messageHandlingFunction) {
+    messageHandlers[topic] = messageHandlingFunction
 }
 
-consumerExample()
-  .catch((err) => {
-    console.error(`Something went wrong:\n${err}`);
-    process.exit(1);
-  });
+// this function returns a list of (non-administrative) topics on the cluster
+const getTopics = async function () {
+    console.log('here')
+    const producer = new Kafka.Producer(kafkaConf);
+    return new Promise((resolve, reject) => {
+        producer.connect()
+            .on('ready', function (i, metadata) {
+                const clusterTopics = metadata.topics.reduce((topicsList, topic) => {
+                    if (!topic.name.startsWith("__")) // do not include internal topics
+                        topicsList.push(topic.name)
+                    return topicsList
+                }, [])
+                console.log(`Topics on cluster are ${clusterTopics}`)
+                producer.disconnect()
+                resolve(clusterTopics)
+            })
+            .on('event.error', function (err) {
+                console.log(err);
+                resolve(err)
+            });
+    })// 
+}// getTopics
+//maybe change above to use api?
+let stream
+let offsetLatest ="latest"  
+let offsetEarliest ="earliest"    
+// consumption is done in a unique consumer group
+// initially it reads only new messages on topics; this can be toggled to re-read all messages from the earliest available on the topic 
+function initializeConsumer(topicsToListenTo, readFromBeginning=true) {
+    const CONSUMER_GROUP_ID = "kafka-topic-watcher-" + new Date().getTime()
+    kafkaConf["group.id"] = CONSUMER_GROUP_ID
+    if (stream) {
+        stream.consumer.disconnect();
+    }
+
+    stream = new Kafka.KafkaConsumer.createReadStream(kafkaConf
+        , { "auto.offset.reset": readFromBeginning? offsetEarliest:offsetLatest }, {
+        topics: topicsToListenTo
+    });
+    stream.on('data', function (message) {
+        console.log(`Consumed message on Stream from Topic ${message.topic}: ${message.value.toString()} `);
+        if (messageHandlers[message.topic]) messageHandlers[message.topic](message)
+        else console.log("No message handler is registered for handling mssages on topic ${message.topic}")
+    });
+
+    stream.on('error', function (err) {
+        console.log(`Error event on Stream ${err} `);
+
+    });
+    console.log(`Stream consumer created to consume (from the beginning) from topic ${topicsToListenTo}`);
+
+    stream.consumer.on("disconnected", function (arg) {
+        console.log(`The stream consumer has been disconnected`)
+    });
+}//initializeConsumer
+
+module.exports = { initializeConsumer, setMessageHandler, getTopics };
