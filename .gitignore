@@ -9,3 +9,4 @@ client.js
 sse-consumer.js
 OLD.json
 docker-compose.yaml
+pumba_tests
