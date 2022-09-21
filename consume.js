@@ -1,15 +1,17 @@
 const Kafka = require("node-rdkafka"); // see: https://github.com/blizzard/node-rdkafka
-const externalConfig = require('./config');
+const externalConfig = require('dotenv').config();
 
-// construct a Kafka Configuration object understood by the node-rdkafka library
-// merge the configuration as defined in config.js with additional properties defined here
-const kafkaConf = {
-    ...externalConfig.kafkaConfig
-    , ...{
-        "socket.keepalive.enable": true,
-        "debug": "generic,broker,security"
-    }
+global.kafkaConf = {
+    // Specify the endpoints of the Confluent Cloud  for your instance found under Connection Details on the Instance Details Page
+    // Define your variables in a .env file in the same dir as this .js file 
+    'metadata.broker.list': process.env.METADATA_BROKER_LIST,
+    'bootstrap.servers' : process.env.BOOTSTRAP_SERVERS,
+    'sasl.mechanisms' : process.env.SASL_MECHANISMS,
+    'security.protocol' : process.env.SECURITY_PROTOCOL,
+    'sasl.username' : process.env.SASL_USERNAME,
+    'sasl.password' : process.env.SASL_PASSWORD
 };
+console.log(kafkaConf)
 
 let messageHandlers = {} // an key-value map with Kafka Topic Names as key and a reference to a function to handle message consumed from that Topic
 const setMessageHandler = function (topic, messageHandlingFunction) {

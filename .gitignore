@@ -7,3 +7,5 @@ config.js
 std-out-working.js
 client.js
 sse-consumer.js
+OLD.json
+docker-compose.yaml
