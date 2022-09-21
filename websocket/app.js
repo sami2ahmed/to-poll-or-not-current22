@@ -1,9 +1,15 @@
 const express = require('express');
 const port = 3000;
 const consumer = require('./consumer')
+const bodyParser = require('body-parser')
 var connectionType;
 var socketClients=[];
+const cors = require('cors');
 const app = express()
+.use(bodyParser.urlencoded({ extended: true }))
+.use(bodyParser.json()) // to parse body of content type application/json
+// to serve static files from the *public* folder under the current directory  
+.use(express.static(__dirname + '/public'))
     .get('/websocketupdates', function (req, res){
         connectionType='websockets'
         initializeWebSocketServer()
@@ -17,7 +23,8 @@ const app = express()
         // reinitialize the Kafka Topic Consumer from the earliest messages available on the topic
         consumer.initializeConsumer(topics,true)
         res.end(JSON.stringify(req.body ))
-    });
+    })
+    .use(cors());
 
 function initializeWebSocketServer(){
     const io = require('socket.io')(Server, {

@@ -1,5 +1,23 @@
 const messages = []
 
+const initializeTable = function() {
+    var table = document.getElementById("topicMessagesTable");
+    var row = table.insertRow(1); // after header
+    var keyCell = row.insertCell(0);
+    var topicCell = row.insertCell(1);
+    var contentCell = row.insertCell(2);
+    var partitionCell = row.insertCell(3);
+    var offsetCell = row.insertCell(4);
+    var timestampCell = row.insertCell(5);
+
+    keyCell.innerHTML = "";
+    topicCell.innerHTML = "";
+    contentCell.innerHTML = "";
+    partitionCell.innerHTML = "";
+    offsetCell.innerHTML = "";
+    timestampCell.innerHTML = "";
+}
+
 const showMessageInTable = function (data) {
     var table = document.getElementById("topicMessagesTable");
     var row = table.insertRow(1); // after header

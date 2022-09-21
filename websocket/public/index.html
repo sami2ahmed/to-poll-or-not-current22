@@ -3,16 +3,19 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Conclusion OnLine Meetups - Kafka Topic Watcher</title>
+    <title>Kafka Consumer App - Connection Protocols</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
-    <script src="js/message-handler.js"></script>
+
+
     <script src="js/socket.js"></script>
+    
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <style >
@@ -25,17 +28,14 @@ td {  padding: 10px; }
 
 <body>
     <div class="container-fluid">     
-        <h1>Conclusion OnLine Meetup - Kafka Topic Watcher</h1>
-        Simple utility to watch messages on all topics in a Kafka Cluster.
+        <h1>Kafka Consumer App - Connection Protocols</h1>
         <h3>Topics Watched</h3>
         <div id="topics">
         </div>
         <a href="#" onclick="config()">Reread all Topic(s) from Beginning</a>
-        <button onclick="clearMessages()">Clear Messages</button> 
-        <button onclick="rewriteTable()">Repaint Table</button>
-        <button onclick="webSocketInvoke()">Use WebSockets</button>
         <br/>
-          <h2>Live Kafka Topic Stream</h2>
+        <h2>Live Kafka Topic Stream</h2>
+        <br/>
         <table id="topicMessagesTable">
             <tr>
                 <th>Key&nbsp;</th>
@@ -46,10 +46,18 @@ td {  padding: 10px; }
                 <th>Timestamp of Production</th>
             </tr>
         </table>
-        <br/>
+        <p>Select a connection type:</p>
+        <div>
+            <input type="radio" name="connectiontype" value="sockets" id="sockets">
+            <label for="sockets">WebSockets</label>
+        </div>
+        <p>
+            <button onclick="connect()">Connect</button> 
+        </p>
     </div>
-    <script src="js/socket.js"></script>
     <script src="js/topics-management.js"></script>
+    <script src="js/socket.js"></script>
+    <script src="js/message-handler.js"></script>
 
 </body>
 
