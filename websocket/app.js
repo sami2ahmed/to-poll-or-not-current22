@@ -6,13 +6,12 @@ var connectionType;
 var socketClients=[];
 const cors = require('cors');
 const app = express()
-.use(bodyParser.urlencoded({ extended: true }))
-.use(bodyParser.json()) // to parse body of content type application/json
-// to serve static files from the *public* folder under the current directory  
-.use(express.static(__dirname + '/public'))
+    .use(bodyParser.urlencoded({ extended: true }))
+    .use(bodyParser.json()) // to parse body of content type application/json
+    // to serve static files from the *public* folder under the current directory  
+    .use(express.static(__dirname + '/public'))
     .get('/websocketupdates', function (req, res){
         connectionType='websockets'
-        initializeWebSocketServer()
     })
     .get('/topics', function (req, res) {
         res.setHeader('Content-Type', 'application/json');
@@ -73,6 +72,7 @@ async function getStarted() {
     console.log(`Topics have returned: ${topics}`)
     topics.forEach((topic) => { consumer.setMessageHandler(topic, handleMessage) })
     consumer.initializeConsumer(topics)
+    initializeWebSocketServer()
 }
   
 getStarted()
