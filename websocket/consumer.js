@@ -1,16 +1,18 @@
-//websocket consumer 
+//websocket consumer
 const Kafka = require('node-rdkafka');
-const externalConfig = require('./config.js');
+const externalConfig = require('dotenv').config();
 
-// construct a Kafka Configuration object understood by the node-rdkafka library
-// merge the configuration as defined in config.js with additional properties defined here
-const kafkaConf = {
-    ...externalConfig.ccloud_config
-    , ...{
-        "socket.keepalive.enable": true,
-        "debug": "generic,broker,security"
-    }
+global.kafkaConf = {
+    // Specify the endpoints of the Confluent Cloud  for your instance found under Connection Details on the Instance Details Page
+    // Define your variables in a .env file in the same dir as this .js file
+    'metadata.broker.list': process.env.METADATA_BROKER_LIST,
+    'bootstrap.servers' : process.env.BOOTSTRAP_SERVERS,
+    'sasl.mechanisms' : process.env.SASL_MECHANISMS,
+    'security.protocol' : process.env.SECURITY_PROTOCOL,
+    'sasl.username' : process.env.SASL_USERNAME,
+    'sasl.password' : process.env.SASL_PASSWORD
 };
+console.log(kafkaConf)
 
 let messageHandlers = {} // an key-value map with Kafka Topic Names as key and a reference to a function to handle message consumed from that Topic
 const setMessageHandler = function (topic, messageHandlingFunction) {
@@ -37,14 +39,14 @@ const getTopics = async function () {
                 console.log(err);
                 resolve(err)
             });
-    })// 
+    })//
 }// getTopics
 //maybe change above to use api?
 let stream
-let offsetLatest ="latest"  
-let offsetEarliest ="earliest"    
+let offsetLatest ="latest"
+let offsetEarliest ="earliest"
 // consumption is done in a unique consumer group
-// initially it reads only new messages on topics; this can be toggled to re-read all messages from the earliest available on the topic 
+// initially it reads only new messages on topics; this can be toggled to re-read all messages from the earliest available on the topic
 function initializeConsumer(topicsToListenTo, readFromBeginning=true) {
     const CONSUMER_GROUP_ID = "kafka-topic-watcher-" + new Date().getTime()
     kafkaConf["group.id"] = CONSUMER_GROUP_ID
