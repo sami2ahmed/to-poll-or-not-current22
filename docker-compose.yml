@@ -1,0 +1,10 @@
+version: '3.6'
+services:
+  websockets-app-node:
+    build: ./websocket
+    ports:
+      - "3000:3000"
+  sse-app-node:
+    build: ./SSE
+    ports:
+    - "3010:3010"
