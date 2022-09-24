@@ -3,7 +3,7 @@ const externalConfig = require('dotenv').config();
 
 global.kafkaConf = {
     // Specify the endpoints of the Confluent Cloud  for your instance found under Connection Details on the Instance Details Page
-    // Define your variables in a .env file in the same dir as this .js file 
+    // Define your variables in a .env file in the same dir as this .js file
     'metadata.broker.list': process.env.METADATA_BROKER_LIST,
     'bootstrap.servers' : process.env.BOOTSTRAP_SERVERS,
     'sasl.mechanisms' : process.env.SASL_MECHANISMS,
@@ -45,7 +45,7 @@ let offsetLatest ="latest"
 let offsetEarliest ="earliest"
 // consumption is done in a unique consumer group
 // initially it reads only new messages on topics; this can be toggled to re-read all messages from the earliest available on the topic
-function initializeConsumer(topicsToListenTo, readFromBeginning=false) {
+function initializeConsumer(topicsToListenTo, readFromBeginning=true) {
     const CONSUMER_GROUP_ID = "kafka-topic-watcher-" + new Date().getTime()
     kafkaConf["group.id"] = CONSUMER_GROUP_ID
     if (stream) {
