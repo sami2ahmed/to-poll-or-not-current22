@@ -1,3 +1,5 @@
+
+
 const ccloud_config = {
     "bootstrap.servers":"<BOOTSTRAP_SERVER>",
     "security.protocol":"SASL_SSL",
