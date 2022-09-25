@@ -43,4 +43,11 @@ function connect() {
         startLongPoll();
         longPollInvoke();
     }
+    if (connectionType==='sse'){
+      let source = new EventSource("../sseupdates");
+      source.onmessage = function (event) {
+        console.log(`Received event ${JSON.stringify(event)}`)
+        processMessage(event)
+      }
+    }
   }

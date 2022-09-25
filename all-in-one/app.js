@@ -2,6 +2,7 @@ const express = require('express');
 const port = 3000;
 const consumer = require('./consumer')
 const bodyParser = require('body-parser')
+const sseMW = require('./sse');
 var connectionType;
 var socketClients=[];
 var events=[];
@@ -20,6 +21,11 @@ const app = express()
         res.send(events);
         events=[]
     })
+    .get('/sseupdates', function (req, res) {
+        var sseConnection = res.sseConnection;
+        sseConnection.setup();
+        sseClients.add(sseConnection);
+      })
     .get('/topics', function (req, res) {
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(topics))
@@ -44,6 +50,14 @@ function initialize(connectionType){
     if (connectionType==='"sockets"'){
         initializeWebSocketServer()
     }
+    else if (connectionType==='"sse"'){
+        initializeSSEServer()
+    }
+}
+
+function initializeSSEServer(){
+    //configure sseMW.sseMiddleware as function to get a stab at incoming requests, in this case by adding a Connection property to the request
+    app.use(sseMW.sseMiddleware)
 }
 function initializeWebSocketServer(){
     const io = require('socket.io')(Server, {
@@ -77,6 +91,16 @@ updateWebSocketClients = function (message) {
 }
 
 
+updateSseClients = function (message) {
+    var sseClients = new sseMW.Topic();
+    sseClients.forEach(function (sseConnection) {
+        sseConnection.send(message);
+    }
+     , this // this second argument to forEach is the thisArg (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach)
+    );
+}
+
+
 const handleMessage = function (message) {
     const messageContent = message.value.toString()
     const messageKey = message.key ? message.key.toString() : ""
@@ -87,6 +111,9 @@ const handleMessage = function (message) {
     msg.key = messageKey
     updateWebSocketClients(
       message
+    )
+    updateSseClients(
+        message
     )
     events.push(message)
     socketCache.push(message)
