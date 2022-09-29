@@ -47,6 +47,12 @@ let offsetLatest ="latest"
 let offsetEarliest ="earliest"
 // consumption is done in a unique consumer group
 // initially it reads only new messages on topics; this can be toggled to re-read all messages from the earliest available on the topic
+function convertEpochToUTC(timeEpoch){
+    var d = new Date(timeEpoch);
+    return d.toISOString();
+}
+// convertEpochToSpecificTimezone(, -5) for ET
+
 function initializeConsumer(topicsToListenTo, readFromBeginning=true) {
     const CONSUMER_GROUP_ID = "kafka-topic-watcher-" + new Date().getTime()
     kafkaConf["group.id"] = CONSUMER_GROUP_ID
@@ -59,19 +65,25 @@ function initializeConsumer(topicsToListenTo, readFromBeginning=true) {
         topics: topicsToListenTo
     });
     stream.on('data', function (message) {
-        console.log(`Consumed message on Stream from Topic ${message.topic}: ${message.value.toString()} `);
+      var d = new Date()
+      timeEpoch = d.getTime()
+      console.log(`Consume started at ${convertEpochToUTC(timeEpoch)}, ${message.topic}: ${message.value.toString()} `);
         if (messageHandlers[message.topic]) messageHandlers[message.topic](message)
         else console.log("No message handler is registered for handling mssages on topic ${message.topic}")
     });
 
     stream.on('error', function (err) {
-        console.log(`Error event on Stream ${err} `);
+      var d = new Date()
+      timeEpoch = d.getTime()
+      console.log(`At ${convertEpochToUTC(timeEpoch)}, Error event on Stream ${err} `);
 
     });
     console.log(`Stream consumer created to consume (from the beginning) from topic ${topicsToListenTo}`);
 
     stream.consumer.on("disconnected", function (arg) {
-        console.log(`The stream consumer has been disconnected`)
+      var d = new Date()
+      timeEpoch = d.getTime()
+      console.log(`At ${convertEpochToUTC(timeEpoch)}, The stream consumer has been disconnected`)
     });
 }//initializeConsumer
 

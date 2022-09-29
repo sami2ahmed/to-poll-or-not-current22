@@ -33,10 +33,14 @@ exports.Connection = Connection;
 /**
  * A Topic handles a bundle of connections with cleanup after lost connection.
  */
+ function convertEpochToUTC(timeEpoch){
+     var d = new Date(timeEpoch);
+     return d.toISOString();
+ }
+
 var Topic = (function () {
     function Topic() {
         console.log(" constructor for Topic");
-
         this.connections = [];
     }
     Topic.prototype.add = function (conn) {
@@ -48,7 +52,9 @@ var Topic = (function () {
             if (i >= 0) {
                 connections.splice(i, 1);
             }
-            console.log('Client disconnected, now: ', connections.length);
+            var d = new Date()
+            timeEpoch = d.getTime()
+            console.log(`At ${convertEpochToUTC(timeEpoch)} Client disconnected, now: `, connections.length);
         });
     };
     Topic.prototype.forEach = function (cb) {

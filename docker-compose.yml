@@ -2,13 +2,13 @@ version: '3.6'
 services:
   websockets-app-node:
     build: ./websocket
-    image: ag/websockets-app2
+    image: ag/websockets-app5
     ports:
       - "3000:3000"
     container_name: websocket-app
   sse-app-node:
     build: ./SSE
-    image: sahmed/node-sse-app15
+    image: sahmed/node-sse-app20
     ports:
     - "3010:3010"
     container_name: sse-app
