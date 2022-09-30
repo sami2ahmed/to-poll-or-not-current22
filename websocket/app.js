@@ -8,7 +8,7 @@ const cors = require('cors');
 const app = express()
     .use(bodyParser.urlencoded({ extended: true }))
     .use(bodyParser.json()) // to parse body of content type application/json
-    // to serve static files from the *public* folder under the current directory  
+    // to serve static files from the *public* folder under the current directory
     .use(express.static(__dirname + '/public'))
     .get('/websocketupdates', function (req, res){
         connectionType='websockets'
@@ -35,7 +35,7 @@ function initializeWebSocketServer(){
     io.on('connection', client => {
         console.log('Connected', client);
         socketClients.push(client);
-        client.on('disconnect', () => { 
+        client.on('disconnect', () => {
           console.log('Client disconnected');
         });
     });
@@ -54,7 +54,7 @@ updateWebSocketClients = function (message) {
 
 
 const handleMessage = function (message) {
-    const messageContent = message.value.toString()
+    const messageContent = message.value?.toString() || '';
     const messageKey = message.key ? message.key.toString() : ""
     let msg = message
     msg.value = null
@@ -74,5 +74,5 @@ async function getStarted() {
     consumer.initializeConsumer(topics)
     initializeWebSocketServer()
 }
-  
+
 getStarted()

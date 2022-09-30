@@ -59,7 +59,8 @@ setInterval(() => {
 )
 
 const handleMessage = function (message) {
-  const messageContent = message.value.toString()
+  // const messageContent = message.value.toString()
+  const messageContent = message.value?.toString() || '';
   const messageKey = message.key ? message.key.toString() : ""
   let msg = message
   msg.value = null
