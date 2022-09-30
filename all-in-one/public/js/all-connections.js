@@ -1,3 +1,4 @@
+
 async function postData(url = '', data = {}) {
     // Default options are marked with *
     const response = await fetch(url, {
@@ -41,5 +42,12 @@ function connect() {
     if (connectionType==='longpolling') {
         startLongPoll();
         longPollInvoke();
+    }
+    if (connectionType==='sse'){
+      let source = new EventSource("../sseupdates");
+      source.onmessage = function (event) {
+        console.log(`Received event ${JSON.stringify(event)}`)
+        processMessage(event)
+      }
     }
   }

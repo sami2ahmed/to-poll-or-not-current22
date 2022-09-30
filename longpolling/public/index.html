@@ -17,7 +17,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 
 
-    <script src="js/socket.js"></script>
     
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -37,25 +36,6 @@ td {  padding: 10px; }
         </div>
         <a href="#" onclick="config()">Reread all Topic(s) from Beginning</a>
         <br/>
-        <p>Select a connection type:</p>
-        <div>
-            <input type="radio" name="connectiontype" value="sockets" id="sockets">
-            <label for="sockets">WebSockets</label>
-        </div>
-        <div>
-            <input type="radio" name="connectiontype" value="longpolling" id="longpolling">
-            <label for="longpolling">LongPolling</label>
-        </div>
-        <div>
-            <input type="radio" name="connectiontype" value="sse" id="sse">
-            <label for="sse">SSE</label>
-        </div>
-        <p>
-            <button onclick="setConnectionType()">Set ConnectionType</button> 
-        </p>
-        <p>
-            <button onclick="connect()">Connect</button> 
-        </p>
         <br/>
         <h2>Live Kafka Topic Stream</h2>
         <br/>
@@ -71,8 +51,6 @@ td {  padding: 10px; }
         </table>
     </div>
     <script src="js/topics-management.js"></script>
-    <script src="js/all-connections.js"></script>
-    <script src="js/socket.js"></script>
     <script src="js/longpolling.js"></script>
     <script src="js/message-handler.js"></script>
 
