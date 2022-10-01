@@ -65,5 +65,3 @@ const processMessage = function (value) {
     messages.unshift(value)
     showMessageInTable(value)
 }
-
-
