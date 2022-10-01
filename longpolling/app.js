@@ -7,7 +7,7 @@ const cors = require('cors');
 const app = express()
     .use(bodyParser.urlencoded({ extended: true }))
     .use(bodyParser.json()) // to parse body of content type application/json
-    // to serve static files from the *public* folder under the current directory  
+    // to serve static files from the *public* folder under the current directory
     .use(express.static(__dirname + '/public'))
     .get('/longpollingupdates', function (req, res){
         res.status(200);
@@ -32,11 +32,8 @@ const Server = app.listen(port, () => {
 });
 
 
-
-
-
 const handleMessage = function (message) {
-    const messageContent = message.value.toString()
+    const messageContent = message.value?.toString() || '';
     const messageKey = message.key ? message.key.toString() : ""
     let msg = message
     msg.value = null
@@ -53,5 +50,5 @@ async function getStarted() {
     topics.forEach((topic) => { consumer.setMessageHandler(topic, handleMessage) })
     consumer.initializeConsumer(topics)
 }
-  
+
 getStarted()
