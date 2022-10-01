@@ -63,8 +63,10 @@ function initializeConsumer(topicsToListenTo, readFromBeginning=true) {
         topics: topicsToListenTo
     });
     stream.on('data', function (message) {
-        const msgval = message.value?.toString() || '';
-        console.log(`Consume started at ${convertEpochToUTC(timeEpoch)}, ${message.topic}: ${msgval} `);
+      var d = new Date()
+      timeEpoch = d.getTime()
+      const msgval = message.value?.toString() || '';
+      console.log(`Consume started at ${convertEpochToUTC(timeEpoch)}, ${message.topic}: ${msgval} `);
         if (messageHandlers[message.topic]) messageHandlers[message.topic](message)
         else console.log("No message handler is registered for handling mssages on topic ${message.topic}")
     });
