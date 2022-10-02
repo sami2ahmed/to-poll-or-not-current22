@@ -21,13 +21,12 @@ const setMessageHandler = function (topic, messageHandlingFunction) {
 
 // this function returns a list of (non-administrative) topics on the cluster
 const getTopics = async function () {
-    console.log('here')
     const producer = new Kafka.Producer(kafkaConf);
     return new Promise((resolve, reject) => {
         producer.connect()
             .on('ready', function (i, metadata) {
                 const clusterTopics = metadata.topics.reduce((topicsList, topic) => {
-                    if (!topic.name.startsWith("__")) // do not include internal topics
+                    if (!(topic.name.startsWith("__") || topic.name.startsWith("_"))) // do not include internal topics
                         topicsList.push(topic.name)
                     return topicsList
                 }, [])
