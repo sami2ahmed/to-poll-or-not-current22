@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Kafka Consumer App - Connection Protocols</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Axios-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+    
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style >
+td {  padding: 10px; }
+
+.floatRight {     float: right; }
+</style>
+
+</head>
+
+<body>
+    <div class="container-fluid">     
+        <h1>Kafka Consumer App - Connection Protocols</h1>
+        <h3>Topics Watched</h3>
+        <div id="topics">
+        </div>
+        <br/>
+        <a href="html/longpolling.html">Connect Using LongPolling</a>
+        <br/>
+        <a href="html/socket.html">Connect Using WebSockets</a>
+        <br/>
+        <a href="html/sse.html">Connect Using Server Sent Events</a>
+    </div>
+    <script src="js/topics-management.js"></script>
+
+</body>
+
+</html>
