@@ -63,5 +63,7 @@ node app.js
 
 open a browser client by navigating to [localhost:3000](localhost:3000) and select the connection mechanism you want to use. You'll be redirected to a page with your data stream. You can toggle between types by selecting "Change Connection Type".  
 
+# references
 
+s/o to [Lucas Jellema's Online Meetup Code](https://github.com/AMIS-Services/online-meetups-introduction-of-kafka/tree/master/lab2b-topic-watcher) that served as the backbone for a lot of our front end code. This meetup showcased SSEs. 
 
