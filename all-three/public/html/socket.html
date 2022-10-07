@@ -3,9 +3,12 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Kafka Consumer App - Connection Protocols</title>
+    <title>Kafka Consumer App - WebSockets</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- WebSockets-->
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
 
     <!-- Axios-->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -14,8 +17,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 
-
-    <script src="js/longpolling.js"></script>
     
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -29,11 +30,14 @@ td {  padding: 10px; }
 
 <body>
     <div class="container-fluid">     
-        <h1>Kafka Consumer App - Connection Protocols</h1>
+        <h1>Kafka Consumer App - WebSockets</h1>
         <h3>Topics Watched</h3>
         <div id="topics">
         </div>
+        <br/>
         <a href="#" onclick="config()">Reread all Topic(s) from Beginning</a>
+        <br/>
+        <a href="../index.html">Change Connection Type</a>
         <br/>
         <h2>Live Kafka Topic Stream</h2>
         <br/>
@@ -48,9 +52,9 @@ td {  padding: 10px; }
             </tr>
         </table>
     </div>
-    <script src="js/topics-management.js"></script>
-    <script src="js/longpolling.js"></script>
-    <script src="js/message-handler.js"></script>
+    <script src="../js/topics-management.js"></script>
+    <script src="../js/socket.js"></script>
+    <script src="../js/message-handler.js"></script>
 
 </body>
 

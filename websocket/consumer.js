@@ -27,7 +27,7 @@ const getTopics = async function () {
         producer.connect()
             .on('ready', function (i, metadata) {
                 const clusterTopics = metadata.topics.reduce((topicsList, topic) => {
-                    if (!topic.name.startsWith("__")) // do not include internal topics
+                    if (!(topic.name.startsWith("__") || topic.name.startsWith("_"))) // do not include internal topics
                         topicsList.push(topic.name)
                     return topicsList
                 }, [])

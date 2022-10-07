@@ -14,8 +14,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 
-
-    <script src="js/longpolling.js"></script>
     
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -33,24 +31,14 @@ td {  padding: 10px; }
         <h3>Topics Watched</h3>
         <div id="topics">
         </div>
-        <a href="#" onclick="config()">Reread all Topic(s) from Beginning</a>
         <br/>
-        <h2>Live Kafka Topic Stream</h2>
+        <a href="html/longpolling.html">Connect Using LongPolling</a>
         <br/>
-        <table id="topicMessagesTable">
-            <tr>
-                <th>Key&nbsp;</th>
-                <th>Topic&nbsp;</th>
-                <th>Content&nbsp;</th>
-                <th>Partition</th>
-                <th>Offset within Partition</th>
-                <th>Timestamp of Production</th>
-            </tr>
-        </table>
+        <a href="html/socket.html">Connect Using WebSockets</a>
+        <br/>
+        <a href="html/sse.html">Connect Using Server Sent Events</a>
     </div>
     <script src="js/topics-management.js"></script>
-    <script src="js/longpolling.js"></script>
-    <script src="js/message-handler.js"></script>
 
 </body>
 
