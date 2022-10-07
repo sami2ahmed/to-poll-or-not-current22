@@ -1,4 +1,3 @@
-// assume that API service is published on same server that is the server of this HTML file
 let source = new EventSource("../updates");
 
 const messages = []
@@ -25,10 +24,10 @@ function clearMessageTable() {
     var table = document.getElementById("topicMessagesTable");
     // delete all rows after header
     const totalRowCount = table.rows.length; // 5
-    // remove all but the first (header) row 
+    // remove all but the first (header) row
     for (let i = totalRowCount; i > 1; i--)
         table.deleteRow(1)
-    
+
 }//clearMessageTable
 
 const clearMessages = function () {
@@ -39,7 +38,7 @@ const clearMessages = function () {
 const displayAllMessagesInTable = function (messages) {
     // use slice to create a shallow copy and reverse    messages.slice().reverse().forEach( showMessageInTable )
     messages.slice().reverse().forEach( showMessageInTable )
-} 
+}
 
 const rewriteTable = function () {
     clearMessageTable()
